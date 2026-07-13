@@ -1,0 +1,20 @@
+## Interface: 11200
+## Title: Teron's Modern Talents
+## Author: Terongorus
+## Notes: A custom talent tree window with glowing prereq connections, tier-lock indicators, and a Plan Mode for theorycrafting builds - inspired by the retail talent UI. Works on Turtle WoW and pure Vanilla 1.12.1.
+## Version: 1.0.0
+## DefaultState: enabled
+
+## Dependencies: TeronModernCore
+
+## SavedVariablesPerCharacter: ModernTalents_DB
+
+# Talents
+Talents\MSB_TalentCompat.lua
+Talents\MSB_TalentPlans.lua
+Talents\MSB_TalentIcon.lua
+Talents\MSB_TalentConnection.lua
+Talents\MSB_TalentGrid.lua
+Talents\MSB_TalentExpanded.lua
+Talents\MSB_TalentSettings.lua
+Talents\MSB_TalentTree.lua
