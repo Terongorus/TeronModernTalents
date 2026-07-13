@@ -5,6 +5,21 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 Versions follow major.minor.hotfix (e.g. 1.2.3).
 
+## [1.0.2] - 2026-07-13
+
+### Fixed
+- 1.0.1's load-time-only fix for the `ModernTalents_DB` nil issue wasn't actually reliable -
+  confirmed live, the exact same crash recurred on a later click even with that guard in place,
+  meaning something after this addon's files finish loading (most likely the client's own
+  SavedVariablesPerCharacter assignment for a still-brand-new, never-saved-to-disk character) can
+  still clobber the global back to nil afterward. Replaced the one-time guard with
+  `MSB_EnsureTalentsDB()`, called immediately before every single write across the whole addon
+  (position/scale save, grid line settings, force-shift-click toggle, and Plan Mode's own
+  `EnsureDB()` - which previously fell back to a throwaway placeholder table in this situation,
+  silently discarding every planned-talent write instead of persisting it). Checking and
+  repairing right at the point of use, with zero time gap before the actual write, is safe
+  regardless of what clobbers the global in between calls.
+
 ## [1.0.1] - 2026-07-13
 
 ### Fixed

@@ -5,16 +5,20 @@
 
 -- CTalentTree builds its entire UI (including widgets with OnClick handlers that write straight
 -- to ModernTalents_DB) synchronously in __init at file-load time, not gated behind ADDON_LOADED
--- the way TeronModernSpellBook's own frame construction is. On a brand-new SavedVariablesPerCharacter
--- with no prior session ever having saved it to disk, the client isn't reliably observed to have
--- the global populated yet by the time this addon's files execute - confirmed live: an unguarded
--- write in MSB_TalentTree.lua's force-shift-click checkbox threw "attempt to index global
--- ModernTalents_DB (a nil value)" on a fresh install. Guarantee the table ourselves here, first
--- file in the .toc, rather than trust that timing - a no-op if the client already set it from a
--- real prior save (the `not` short-circuits), otherwise every consumer in every file from this
--- point on sees a real table instead of nil.
-if (not ModernTalents_DB) then
-	ModernTalents_DB = {}
+-- the way TeronModernSpellBook's own frame construction is. A one-time guard here at file-load
+-- ("if not ModernTalents_DB then ModernTalents_DB = {} end") was NOT enough - confirmed live,
+-- the exact same "attempt to index global ModernTalents_DB (a nil value)" crash recurred on a
+-- later click even with that guard in place, meaning something after this file runs (most likely
+-- the client's own SavedVariablesPerCharacter assignment for a still-brand-new, never-saved-to-disk
+-- character/addon pair) can still clobber it back to nil afterward. A load-time fix can't win that
+-- race no matter where it's placed, since the clobber happens later. MSB_EnsureTalentsDB() instead
+-- checks and repairs the global immediately before every actual write, with zero time gap between
+-- the check and the use, which is safe regardless of what happens in between calls.
+function MSB_EnsureTalentsDB()
+	if (not ModernTalents_DB) then
+		ModernTalents_DB = {}
+	end
+	return ModernTalents_DB
 end
 
 -- GetTalentPrereqs isn't available on every client build; wrapped in pcall so a missing/erroring

@@ -132,7 +132,7 @@ class "CTalentTree"
 		self.frame:SetScript("OnDragStop", function()
 			this:StopMovingOrSizing()
 			local point, _, relPoint, x, y = this:GetPoint()
-			ModernTalents_DB.position = { point = point, relPoint = relPoint, x = x, y = y }
+			MSB_EnsureTalentsDB().position = { point = point, relPoint = relPoint, x = x, y = y }
 		end)
 		self.frame:Hide()
 		table.insert(UISpecialFrames, "ModernTalentTreeFrame")
@@ -182,9 +182,10 @@ class "CTalentTree"
 		end)
 		resizeHandle:SetScript("OnMouseUp", function()
 			resizeHandle:SetScript("OnUpdate", nil)
-			ModernTalents_DB.scale = self.frame:GetScale()
+			local db = MSB_EnsureTalentsDB()
+			db.scale = self.frame:GetScale()
 			local point, _, relPoint, x, y = self.frame:GetPoint()
-			ModernTalents_DB.position = { point = point, relPoint = relPoint, x = x, y = y }
+			db.position = { point = point, relPoint = relPoint, x = x, y = y }
 		end)
 
 		-- Title
@@ -265,7 +266,7 @@ class "CTalentTree"
 		self.force_shift_check:SetPoint("RIGHT", forceShiftLabel, "LEFT", -2, 0)
 		self.force_shift_check:SetChecked(ModernTalents_DB and ModernTalents_DB.forceShiftLearn and true or false)
 		self.force_shift_check:SetScript("OnClick", function()
-			ModernTalents_DB.forceShiftLearn = this:GetChecked() and true or false
+			MSB_EnsureTalentsDB().forceShiftLearn = this:GetChecked() and true or false
 		end)
 
 		-- Talent plan switcher: dropdown + Rename/Clear, chained right of the Planned button.

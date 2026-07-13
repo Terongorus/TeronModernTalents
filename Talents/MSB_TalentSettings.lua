@@ -132,8 +132,9 @@ class "CTalentSettings"
 			info.text = "Reset position & scale"
 			info.notCheckable = 1
 			info.func = function()
-				ModernTalents_DB.position = nil
-				ModernTalents_DB.scale = nil
+				local db = MSB_EnsureTalentsDB()
+				db.position = nil
+				db.scale = nil
 				tree.frame:SetScale(1)
 				tree.frame:ClearAllPoints()
 				tree.frame:SetPoint("CENTER", UIParent, "CENTER", 0, 0)
@@ -143,10 +144,11 @@ class "CTalentSettings"
 
 		elseif (level == 2) then
 			if (UIDROPDOWNMENU_MENU_VALUE == "gridLines") then
-				if (not ModernTalents_DB.gridLines) then
-					ModernTalents_DB.gridLines = { vertical = true, diagonal = true, horizontal = true }
+				local msbTalentsDB = MSB_EnsureTalentsDB()
+				if (not msbTalentsDB.gridLines) then
+					msbTalentsDB.gridLines = { vertical = true, diagonal = true, horizontal = true }
 				end
-				local gl = ModernTalents_DB.gridLines
+				local gl = msbTalentsDB.gridLines
 
 				local info = {}
 				info.text = "Vertical"
@@ -197,10 +199,11 @@ class "CTalentSettings"
 
 		elseif (level == 3) then
 			if (UIDROPDOWNMENU_MENU_VALUE == "gridLineVisibility") then
-				if (not ModernTalents_DB.gridLines) then
-					ModernTalents_DB.gridLines = { vertical = true, diagonal = true, horizontal = true }
+				local msbTalentsDB = MSB_EnsureTalentsDB()
+				if (not msbTalentsDB.gridLines) then
+					msbTalentsDB.gridLines = { vertical = true, diagonal = true, horizontal = true }
 				end
-				local gl = ModernTalents_DB.gridLines
+				local gl = msbTalentsDB.gridLines
 				local visibility = gl.visibility or "unlocked"
 
 				local info = {}
@@ -224,10 +227,11 @@ class "CTalentSettings"
 				UIDropDownMenu_AddButton(info, level)
 
 			elseif (UIDROPDOWNMENU_MENU_VALUE == "gridLineColoring") then
-				if (not ModernTalents_DB.gridLines) then
-					ModernTalents_DB.gridLines = { vertical = true, diagonal = true, horizontal = true }
+				local msbTalentsDB = MSB_EnsureTalentsDB()
+				if (not msbTalentsDB.gridLines) then
+					msbTalentsDB.gridLines = { vertical = true, diagonal = true, horizontal = true }
 				end
-				local gl = ModernTalents_DB.gridLines
+				local gl = msbTalentsDB.gridLines
 				local coloring = gl.coloring or "unlocked"
 
 				local info = {}

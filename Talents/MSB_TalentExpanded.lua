@@ -29,7 +29,7 @@ class "CExpandedSpecFrame"
 			if (self.parent_tree) then
 				self.parent_tree.frame:StopMovingOrSizing()
 				local point, _, relPoint, x, y = self.parent_tree.frame:GetPoint()
-				ModernTalents_DB.position = { point = point, relPoint = relPoint, x = x, y = y }
+				MSB_EnsureTalentsDB().position = { point = point, relPoint = relPoint, x = x, y = y }
 			end
 		end)
 		self.frame:SetScript("OnMouseUp", function()

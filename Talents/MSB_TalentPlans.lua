@@ -20,21 +20,18 @@ class "CTalentPlanService"
 		return MAX_PLAN_COUNT
 	end;
 
+	-- MSB_EnsureTalentsDB() (MSB_TalentCompat.lua) checks and repairs ModernTalents_DB itself
+	-- immediately before use, rather than trusting any one-time load-time guarantee - confirmed
+	-- live that a load-time-only fix isn't reliable (the global can still be nil well after this
+	-- addon's files finish loading). A throwaway placeholder table used to be returned here
+	-- instead of crashing when ModernTalents_DB was nil, but that meant Plan Mode writes silently
+	-- never persisted whenever this path was hit - now it always mutates the real table.
 	EnsureDB = function(self)
-		if (not ModernTalents_DB) then
-			-- UIDropDownMenu_Initialize calls its callback immediately, synchronously, as part of
-			-- its own execution (unlike directly assigning .initialize, which only stores it for
-			-- later) - reachable from CTalentTree's __init at file-load time, before
-			-- ModernTalents_DB's SavedVariables are actually injected. Return a throwaway
-			-- placeholder instead of crashing; the dropdown always re-initializes again right
-			-- before it's actually shown to the user, by which point ModernTalents_DB is
-			-- guaranteed to exist, so this premature call never needs to persist anything real.
-			return { selectedPlan = 1, plans = {} }
+		local db = MSB_EnsureTalentsDB()
+		if (not db.templates) then
+			db.templates = { selectedPlan = 1, plans = {} }
 		end
-		if (not ModernTalents_DB.templates) then
-			ModernTalents_DB.templates = { selectedPlan = 1, plans = {} }
-		end
-		return ModernTalents_DB.templates
+		return db.templates
 	end;
 
 	-- Only the requested slot is created (never all 20 up front), matching the reference addon's
